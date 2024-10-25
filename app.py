@@ -1,7 +1,7 @@
 import os
 
 from flask import (Flask, redirect, render_template, request,
-                   send_from_directory, url_for)
+                   send_from_directory, url_for, jsonify)
 
 app = Flask(__name__)
 
@@ -27,6 +27,18 @@ def hello():
        print('Request for hello page received with no name or blank name -- redirecting')
        return redirect(url_for('index'))
 
+@app.route('/sap_notas', methods=['POST'])
+def receive_json():
+    # Get the JSON data from the request
+    data = request.get_json()
+
+    # You can process or validate the data here if needed
+    if not data:
+        return jsonify({"message": "No JSON received"}), 400
+
+    row_now = data['rowNow']
+    # Return a success message
+    return jsonify({"message": f"Nota {row_now} cadastrada com sucesso"}), 200
 
 if __name__ == '__main__':
    app.run()
